@@ -30,3 +30,13 @@ class StudentManager:
     def display_students(self):
         for s in self.students:
             s.display_record()
+
+if __name__ == "__main__":
+
+    manager = StudentManager()
+
+    s1 = Student("sam@mycsu.edu", "Sam", "Carpenter", "DATA200", "A", 96)
+
+    manager.add_student(s1)
+
+    manager.display_students()

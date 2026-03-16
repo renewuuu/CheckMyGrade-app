@@ -1,0 +1,11 @@
+professor_id,name,email_address,rank,course_id
+PROF001,Michael Johnson,michael.johnson@mycsu.edu,Senior Professor,DATA200
+PROF002,Sarah Smith,sarah.smith@mycsu.edu,Assistant Professor,DATA201
+PROF003,David Brown,david.brown@mycsu.edu,Assistant Professor,DATA202
+PROF004,Emily Davis,emily.davis@mycsu.edu,Senior Professor,DATA203
+PROF005,John Miller,john.miller@mycsu.edu,Associate Professor,DATA204
+PROF006,Sophia Wilson,sophia.wilson@mycsu.edu,Assistant Professor,DATA205
+PROF007,Daniel Moore,daniel.moore@mycsu.edu,Assistant Professor,DATA206
+PROF008,Olivia Taylor,olivia.taylor@mycsu.edu,Assistant Professor,DATA207
+PROF009,James Anderson,james.anderson@mycsu.edu,Senior Professor,DATA208
+PROF010,Emma Thomas,emma.thomas@mycsu.edu,Assistant Professor,DATA209
