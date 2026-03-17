@@ -7,7 +7,8 @@ import statistics
 class Student:
     FILE_NAME = os.path.join(os.path.dirname(__file__), "students.csv")
 
-    def __init__(self, first_name, last_name, email_address, course_id, grades, marks):
+    def __init__(self, student_id, first_name, last_name, email_address, course_id, grades, marks):
+        self.student_id = student_id
         self.first_name = first_name
         self.last_name = last_name
         self.email_address = email_address
@@ -17,6 +18,7 @@ class Student:
 
     def to_dict(self):
         return {
+            "student_id": self.student_id,
             "first_name": self.first_name,
             "last_name": self.last_name,
             "email_address": self.email_address,
@@ -26,17 +28,18 @@ class Student:
         }
 
     @classmethod
-    def load_students(c1):
+    def load_students(cls):
         students = []
 
-        if not os.path.exists(c1.FILE_NAME):
+        if not os.path.exists(cls.FILE_NAME):
             return students
 
-        with open(c1.FILE_NAME, "r", newline="", encoding="utf-8") as file:
+        with open(cls.FILE_NAME, "r", newline="", encoding="utf-8") as file:
             reader = csv.DictReader(file)
 
             for row in reader:
-                student = c1(
+                student = cls(
+                    row["student_id"],
                     row["first_name"],
                     row["last_name"],
                     row["email_address"],
@@ -49,9 +52,17 @@ class Student:
         return students
 
     @classmethod
-    def save_students(c1, students):
-        with open(c1.FILE_NAME, "w", newline="", encoding="utf-8") as file:
-            fieldnames = ["first_name", "last_name", "email_address", "course_id", "grades", "marks"]
+    def save_students(cls, students):
+        with open(cls.FILE_NAME, "w", newline="", encoding="utf-8") as file:
+            fieldnames = [
+                "student_id",
+                "first_name",
+                "last_name",
+                "email_address",
+                "course_id",
+                "grades",
+                "marks"
+            ]
             writer = csv.DictWriter(file, fieldnames=fieldnames)
             writer.writeheader()
 
@@ -60,6 +71,7 @@ class Student:
 
     def display_records(self):
         print("Student Record")
+        print(f"Student ID: {self.student_id}")
         print(f"Name: {self.first_name} {self.last_name}")
         print(f"Email: {self.email_address}")
         print(f"Course ID: {self.course_id}")
@@ -67,6 +79,9 @@ class Student:
         print(f"Marks: {self.marks}")
 
     def add_new_student(self):
+        if not self.student_id:
+            print("Student ID cannot be empty.")
+            return
 
         if not self.email_address:
             print("Email cannot be empty.")
@@ -75,8 +90,11 @@ class Student:
         students = Student.load_students()
 
         for student in students:
+            if student.student_id == self.student_id:
+                print("Student ID already exists.")
+                return
             if student.email_address == self.email_address:
-                print("Student already exists.")
+                print("Student email already exists.")
                 return
 
         students.append(self)
@@ -84,10 +102,9 @@ class Student:
         print("New student added successfully.")
 
     @classmethod
-    def delete_new_student(c1, email_address):
-        students = c1.load_students()
+    def delete_new_student(cls, email_address):
+        students = cls.load_students()
         updated_students = []
-
         found = False
 
         for student in students:
@@ -96,7 +113,7 @@ class Student:
             else:
                 updated_students.append(student)
 
-        c1.save_students(updated_students)
+        cls.save_students(updated_students)
 
         if found:
             print("Student deleted successfully.")
@@ -106,13 +123,42 @@ class Student:
     def check_my_grades(self):
         print(f"{self.first_name} {self.last_name}'s grades: {self.grades}")
 
-    def update_student_record(self, new_first_name=None, new_last_name=None,
-                              new_course_id=None, new_grades=None, new_marks=None):
+    def update_student_record(
+        self,
+        new_student_id=None,
+        new_first_name=None,
+        new_last_name=None,
+        new_email_address=None,
+        new_course_id=None,
+        new_grades=None,
+        new_marks=None
+    ):
         students = Student.load_students()
         found = False
 
         for student in students:
             if student.email_address == self.email_address:
+                if new_student_id is not None:
+                    duplicate_id = any(
+                        s.student_id == new_student_id and s.email_address != self.email_address
+                        for s in students
+                    )
+                    if duplicate_id:
+                        print("Student ID already exists.")
+                        return
+                    student.student_id = new_student_id
+
+                if new_email_address is not None:
+                    duplicate_email = any(
+                        s.email_address == new_email_address and s.email_address != self.email_address
+                        for s in students
+                    )
+                    if duplicate_email:
+                        print("Email already exists.")
+                        return
+                    student.email_address = new_email_address
+                    self.email_address = new_email_address
+
                 if new_first_name is not None:
                     student.first_name = new_first_name
                 if new_last_name is not None:
@@ -136,85 +182,68 @@ class Student:
 
     def check_my_marks(self):
         print(f"{self.first_name} {self.last_name}'s marks: {self.marks}")
-    
-    @classmethod
-    def sort_students_by_name(c1):
-        students = c1.load_students()
 
-        students.sort(key=lambda s: s.first_name)
+    @classmethod
+    def sort_students_by_name(cls):
+        students = cls.load_students()
+        students.sort(key=lambda s: s.first_name.lower())
 
         print("Students sorted by name:")
-
         for student in students:
             student.display_records()
             print("-" * 20)
 
     @classmethod
-    def sort_students_by_marks(c1):
-        students = c1.load_students()
-
-        students.sort(key=lambda s: int(s.marks))
+    def sort_students_by_marks(cls):
+        students = cls.load_students()
+        students.sort(key=lambda s: s.marks)
 
         print("Students sorted by marks:")
-
         for student in students:
             student.display_records()
             print("-" * 20)
 
     @classmethod
-    def search_student(cls, email):
-        import time
-
+    def search_student(cls, student_id):
         students = cls.load_students()
 
         start_time = time.time()
 
         for student in students:
-            if student.email_address == email:
+            if student.student_id == student_id:
                 student.display_records()
-                break
+                end_time = time.time()
+                print(f"Search time: {end_time - start_time:.6f} seconds")
+                return
 
         end_time = time.time()
+        print(f"Search time: {end_time - start_time:.6f} seconds")
+        print("Student not found.")
 
-        print("Search time:", end_time - start_time, "seconds")
-    
     @classmethod
-    def calculate_average_by_course(c1, course_id):
-        students = c1.load_students()
-
-        course_marks = []
-
-        for student in students:
-            if student.course_id == course_id:
-                course_marks.append(student.marks)
+    def calculate_average_by_course(cls, course_id):
+        students = cls.load_students()
+        course_marks = [student.marks for student in students if student.course_id == course_id]
 
         if not course_marks:
             print("No records found for this course.")
             return
 
         average = sum(course_marks) / len(course_marks)
-
         print(f"Average marks for {course_id}: {average}")
 
-
     @classmethod
-    def calculate_median_by_course(c1, course_id):
-        students = c1.load_students()
-
-        course_marks = []
-
-        for student in students:
-            if student.course_id == course_id:
-                course_marks.append(student.marks)
+    def calculate_median_by_course(cls, course_id):
+        students = cls.load_students()
+        course_marks = [student.marks for student in students if student.course_id == course_id]
 
         if not course_marks:
             print("No records found for this course.")
             return
 
         med = statistics.median(course_marks)
-
         print(f"Median marks for {course_id}: {med}")
-    
+
     @classmethod
     def generate_report_by_course(cls, course_id):
         students = cls.load_students()
@@ -224,12 +253,15 @@ class Student:
 
         for student in students:
             if student.course_id == course_id:
-                print(f"{student.first_name} {student.last_name} | {student.grade} | {student.marks}")
+                print(
+                    f"{student.student_id} | "
+                    f"{student.first_name} {student.last_name} | "
+                    f"{student.grades} | {student.marks}"
+                )
                 found = True
 
         if not found:
             print("No records found for this course.")
-
 
     @classmethod
     def generate_report_by_student(cls, email_address):
@@ -242,7 +274,6 @@ class Student:
                 return
 
         print("Student not found.")
-
 
     @classmethod
     def generate_report_by_professor(cls, professor_id):
@@ -265,7 +296,11 @@ class Student:
 
         for student in students:
             if student.course_id == target_course_id:
-                print(f"{student.first_name} {student.last_name} | {student.grade} | {student.marks}")
+                print(
+                    f"{student.student_id} | "
+                    f"{student.first_name} {student.last_name} | "
+                    f"{student.grades} | {student.marks}"
+                )
                 found = True
 
         if not found:
@@ -431,7 +466,7 @@ class Professor:
         print("New professor added successfully.")
 
     @classmethod
-    def delete_professore(cls, professor_id):
+    def delete_professor(cls, professor_id):
         professors = cls.load_professors()
         updated_professors = []
         found = False
@@ -697,18 +732,18 @@ class LoginUser:
 if __name__ == "__main__":
 
     print("\n=== Student Test ===")
-    student1 = Student("Sam", "Carpenter", "sam@mycsu.edu", "DATA200", "A", 96)
+    student1 = Student("S0000", "Sam", "Carpenter", "sam@mycsu.edu", "DATA200", "A", 96)
 
     '''student1.add_new_student()
-    student1.display_records()'''
+    student1.display_records()
     student1.check_my_grades()
     student1.check_my_marks()
 
-    '''print("\n=== Update Student Test ===")
+    print("\n=== Update Student Test ===")
     student1.update_student_record(new_marks=92, new_grades="A")
 
     print("\n=== Search Student Test ===")
-    Student.search_student("sam@mycsu.edu")
+    Student.search_student("S0001")
 
     print("\n=== Sort Students by Name ===")
     Student.sort_students_by_name()
@@ -716,6 +751,7 @@ if __name__ == "__main__":
     print("\n=== Sort Students by Marks ===")
     Student.sort_students_by_marks()
 
+    
     print("\n=== Average by Course ===")
     Student.calculate_average_by_course("DATA200")
 
@@ -726,17 +762,21 @@ if __name__ == "__main__":
     Student.generate_report_by_course("DATA200")
 
     print("\n=== Report by Student ===")
-    Student.generate_report_by_student("sam@mycsu.edu")
+    Student.generate_report_by_student("sam@mycsu.edu")'''
 
+    print("\n========== Delete Student ==========")
+    Student.delete_new_student("sam@mycsu.edu")
    
     # Course Demo
-    print("\n=== Course Test ===")
+    '''print("\n=== Course Test ===")
     course1 = Course("DATA200", "Data Science", "Provides insight about DS and Python")
     course1.add_new_course()
     course1.display_courses()
+    print("\n=== Delete Course===")
+    Course.delete_new_course("DATA200")'''
 
    
-    # Professor Demo
+    ''' # Professor Demo
     print("\n=== Professor Test ===")
     professor1 = Professor(
         "michael.johnson@mycsu.edu",
@@ -744,7 +784,6 @@ if __name__ == "__main__":
         "Senior Professor",
         "DATA200"
     )
-
     professor1.add_new_professor()
     professor1.professors_details()
     professor1.show_course_details_by_professor()
@@ -755,35 +794,33 @@ if __name__ == "__main__":
     print("\n=== Report by Professor ===")
     Student.generate_report_by_professor("michael.johnson@mycsu.edu")
 
-    # Grades Demo
-    print("\n=== Grade Test ===")
+    print("\n=== Delete Professor Test ===")
+    Professor.delete_professor("michael.johnson@mycsu.edu")'''
+    
+   # Grades Demo
+    '''print("\n=== Grade Test ===")
     grade1 = Grades("G001", "A", "90-100")
     grade1.add_grade()
     grade1.display_grade_report()
-
     print("\n=== Modify Grade Test ===")
     grade1.modify_grade(new_grade="A+", new_marks_range="95-100")
+    print("\n=== Delete Grade ===")
+    Grades.delete_grade("G001")'''
+    
 
     # LoginUser Demo
+    '''
     print("\n=== Login Test ===")
-    user1 = LoginUser("michael.johnson@mycsu.edu", "Welcome123#_")
+    user1 = LoginUser("johnson@mycsu.edu", "Welcome123#_")
     user1.add_user()
 
-    login_test = LoginUser("michael.johnson@mycsu.edu", "Welcome123#_")
+    login_test = LoginUser("johnson@mycsu.edu", "Welcome123#_")
     login_test.login()
     login_test.logout()
 
     print("\n=== Change Password Test ===")
-    user1.change_password("NewPassword123#_")
+    user1.change_password("NewPassword123#_")'''
 
-    print("\n========== Delete Student ==========")
-    Student.delete_new_student("sam@mycsu.edu")
 
-    print("\n=== Delete Course Test ===")
-    Course.delete_new_course("DATA200")
 
-    print("\n=== Delete Professor Test ===")
-    Professor.delete_professore("michael.johnson@mycsu.edu")
-
-    print("\n=== Delete Grade Test ===")
-    Grades.delete_grade("G001")'''
+   

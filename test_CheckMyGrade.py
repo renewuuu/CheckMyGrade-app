@@ -11,6 +11,7 @@ class TestCheckMyGrade(unittest.TestCase):
 
     def test_add_student(self):
         student = Student(
+            "S_TEST_001",
             "Test",
             "User",
             "testuser@mycsu.edu",
@@ -27,6 +28,7 @@ class TestCheckMyGrade(unittest.TestCase):
 
     def test_update_student(self):
         student = Student(
+            "S_TEST_002",
             "Update",
             "User",
             "updateuser@mycsu.edu",
@@ -50,6 +52,7 @@ class TestCheckMyGrade(unittest.TestCase):
 
     def test_delete_student(self):
         student = Student(
+            "S_TEST_003",
             "Delete",
             "User",
             "deleteuser@mycsu.edu",
@@ -164,7 +167,7 @@ class TestCheckMyGrade(unittest.TestCase):
             "DATA200"
         )
         professor.add_new_professor()
-        Professor.delete_professore("delete.prof@mycsu.edu")
+        Professor.delete_professor("delete.prof@mycsu.edu")
 
         professors = Professor.load_professors()
         found = any(p.professor_id == "delete.prof@mycsu.edu" for p in professors)

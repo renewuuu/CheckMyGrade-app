@@ -1,5 +1,4 @@
 course_id,course_name,description
-DATA200,Data Science,Provides insight about DS and Python
 DATA201,Python Programming,Covers Python basics and object-oriented programming
 DATA202,Statistics,Introduces descriptive and inferential statistics
 DATA203,Machine Learning,Explains supervised and unsupervised learning methods
@@ -11,3 +10,4 @@ DATA208,Data Mining,Covers pattern discovery and data analysis techniques
 DATA209,Algorithms,Introduces algorithm design and problem-solving methods
 TEST101,Test Course,Test Description
 MOD101,New Course,New Description
+DATA200,Data Science,Provides insight about DS and Python
