@@ -598,6 +598,7 @@ class Grades:
 
 
 class LoginUser:
+
     FILE_NAME = os.path.join(os.path.dirname(__file__), "login.csv")
 
     def __init__(self, email_id, password):
@@ -692,44 +693,78 @@ class LoginUser:
         else:
             print("User not found.")
 
+
 if __name__ == "__main__":
-    '''print("=== Student Test ===")
+
+    print("\n=== Student Test ===")
     student1 = Student("Sam", "Carpenter", "sam@mycsu.edu", "DATA200", "A", 96)
-    student1.add_new_student()
-    student1.display_records()
+
+    '''student1.add_new_student()
+    student1.display_records()'''
     student1.check_my_grades()
     student1.check_my_marks()
 
-    print("\n=== Update Student Test ===")
-    student1.update_student_record(new_marks=92, new_grade="A")
+    '''print("\n=== Update Student Test ===")
+    student1.update_student_record(new_marks=92, new_grades="A")
 
-    print("\n=== Load All Students Test ===")
-    students = Student.load_students()
-    for student in students:
-        student.display_records()
-        print("-" * 30)
+    print("\n=== Search Student Test ===")
+    Student.search_student("sam@mycsu.edu")
 
+    print("\n=== Sort Students by Name ===")
+    Student.sort_students_by_name()
+
+    print("\n=== Sort Students by Marks ===")
+    Student.sort_students_by_marks()
+
+    print("\n=== Average by Course ===")
+    Student.calculate_average_by_course("DATA200")
+
+    print("\n=== Median by Course ===")
+    Student.calculate_median_by_course("DATA200")
+
+    print("\n=== Report by Course ===")
+    Student.generate_report_by_course("DATA200")
+
+    print("\n=== Report by Student ===")
+    Student.generate_report_by_student("sam@mycsu.edu")
+
+   
+    # Course Demo
     print("\n=== Course Test ===")
-    course1 = Course("DATA200", 3, "Data Science")
+    course1 = Course("DATA200", "Data Science", "Provides insight about DS and Python")
     course1.add_new_course()
     course1.display_courses()
 
+   
+    # Professor Demo
     print("\n=== Professor Test ===")
     professor1 = Professor(
-        "Michael Johnson",
         "michael.johnson@mycsu.edu",
+        "Michael Johnson",
         "Senior Professor",
         "DATA200"
     )
+
     professor1.add_new_professor()
     professor1.professors_details()
     professor1.show_course_details_by_professor()
 
+    print("\n=== Modify Professor Test ===")
+    professor1.modify_professor_details(new_professor_name="Michael J. Johnson")
+
+    print("\n=== Report by Professor ===")
+    Student.generate_report_by_professor("michael.johnson@mycsu.edu")
+
+    # Grades Demo
     print("\n=== Grade Test ===")
     grade1 = Grades("G001", "A", "90-100")
     grade1.add_grade()
-    grade1.display_grade_report()'''
+    grade1.display_grade_report()
 
+    print("\n=== Modify Grade Test ===")
+    grade1.modify_grade(new_grade="A+", new_marks_range="95-100")
+
+    # LoginUser Demo
     print("\n=== Login Test ===")
     user1 = LoginUser("michael.johnson@mycsu.edu", "Welcome123#_")
     user1.add_user()
@@ -738,7 +773,10 @@ if __name__ == "__main__":
     login_test.login()
     login_test.logout()
 
-    '''print("\n=== Delete Student Test ===")
+    print("\n=== Change Password Test ===")
+    user1.change_password("NewPassword123#_")
+
+    print("\n========== Delete Student ==========")
     Student.delete_new_student("sam@mycsu.edu")
 
     print("\n=== Delete Course Test ===")
