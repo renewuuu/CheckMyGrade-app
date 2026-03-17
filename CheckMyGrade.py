@@ -1,16 +1,18 @@
 import csv
 import os
 import hashlib
+import time
+import statistics
 
 class Student:
     FILE_NAME = os.path.join(os.path.dirname(__file__), "students.csv")
 
-    def __init__(self, first_name, last_name, email_address, course_id, grade, marks):
+    def __init__(self, first_name, last_name, email_address, course_id, grades, marks):
         self.first_name = first_name
         self.last_name = last_name
         self.email_address = email_address
         self.course_id = course_id
-        self.grade = grade
+        self.grades = grades
         self.marks = int(marks)
 
     def to_dict(self):
@@ -19,7 +21,7 @@ class Student:
             "last_name": self.last_name,
             "email_address": self.email_address,
             "course_id": self.course_id,
-            "grade": self.grade,
+            "grades": self.grades,
             "marks": self.marks
         }
 
@@ -39,7 +41,7 @@ class Student:
                     row["last_name"],
                     row["email_address"],
                     row["course_id"],
-                    row["grade"],
+                    row["grades"],
                     row["marks"]
                 )
                 students.append(student)
@@ -49,7 +51,7 @@ class Student:
     @classmethod
     def save_students(c1, students):
         with open(c1.FILE_NAME, "w", newline="", encoding="utf-8") as file:
-            fieldnames = ["first_name", "last_name", "email_address", "course_id", "grade", "marks"]
+            fieldnames = ["first_name", "last_name", "email_address", "course_id", "grades", "marks"]
             writer = csv.DictWriter(file, fieldnames=fieldnames)
             writer.writeheader()
 
@@ -61,10 +63,15 @@ class Student:
         print(f"Name: {self.first_name} {self.last_name}")
         print(f"Email: {self.email_address}")
         print(f"Course ID: {self.course_id}")
-        print(f"Grade: {self.grade}")
+        print(f"Grades: {self.grades}")
         print(f"Marks: {self.marks}")
 
     def add_new_student(self):
+
+        if not self.email_address:
+            print("Email cannot be empty.")
+            return
+
         students = Student.load_students()
 
         for student in students:
@@ -97,10 +104,10 @@ class Student:
             print("Student not found.")
 
     def check_my_grades(self):
-        print(f"{self.first_name} {self.last_name}'s grade: {self.grade}")
+        print(f"{self.first_name} {self.last_name}'s grades: {self.grades}")
 
     def update_student_record(self, new_first_name=None, new_last_name=None,
-                              new_course_id=None, new_grade=None, new_marks=None):
+                              new_course_id=None, new_grades=None, new_marks=None):
         students = Student.load_students()
         found = False
 
@@ -112,8 +119,8 @@ class Student:
                     student.last_name = new_last_name
                 if new_course_id is not None:
                     student.course_id = new_course_id
-                if new_grade is not None:
-                    student.grade = new_grade
+                if new_grades is not None:
+                    student.grades = new_grades
                 if new_marks is not None:
                     student.marks = int(new_marks)
 
@@ -129,21 +136,154 @@ class Student:
 
     def check_my_marks(self):
         print(f"{self.first_name} {self.last_name}'s marks: {self.marks}")
+    
+    @classmethod
+    def sort_students_by_name(c1):
+        students = c1.load_students()
 
+        students.sort(key=lambda s: s.first_name)
+
+        print("Students sorted by name:")
+
+        for student in students:
+            student.display_records()
+            print("-" * 20)
+
+    @classmethod
+    def sort_students_by_marks(c1):
+        students = c1.load_students()
+
+        students.sort(key=lambda s: int(s.marks))
+
+        print("Students sorted by marks:")
+
+        for student in students:
+            student.display_records()
+            print("-" * 20)
+
+    @classmethod
+    def search_student(cls, email):
+        import time
+
+        students = cls.load_students()
+
+        start_time = time.time()
+
+        for student in students:
+            if student.email_address == email:
+                student.display_records()
+                break
+
+        end_time = time.time()
+
+        print("Search time:", end_time - start_time, "seconds")
+    
+    @classmethod
+    def calculate_average_by_course(c1, course_id):
+        students = c1.load_students()
+
+        course_marks = []
+
+        for student in students:
+            if student.course_id == course_id:
+                course_marks.append(student.marks)
+
+        if not course_marks:
+            print("No records found for this course.")
+            return
+
+        average = sum(course_marks) / len(course_marks)
+
+        print(f"Average marks for {course_id}: {average}")
+
+
+    @classmethod
+    def calculate_median_by_course(c1, course_id):
+        students = c1.load_students()
+
+        course_marks = []
+
+        for student in students:
+            if student.course_id == course_id:
+                course_marks.append(student.marks)
+
+        if not course_marks:
+            print("No records found for this course.")
+            return
+
+        med = statistics.median(course_marks)
+
+        print(f"Median marks for {course_id}: {med}")
+    
+    @classmethod
+    def generate_report_by_course(cls, course_id):
+        students = cls.load_students()
+
+        print(f"Grade Report for Course: {course_id}")
+        found = False
+
+        for student in students:
+            if student.course_id == course_id:
+                print(f"{student.first_name} {student.last_name} | {student.grade} | {student.marks}")
+                found = True
+
+        if not found:
+            print("No records found for this course.")
+
+
+    @classmethod
+    def generate_report_by_student(cls, email_address):
+        students = cls.load_students()
+
+        for student in students:
+            if student.email_address == email_address:
+                print("Grade Report for Student")
+                student.display_records()
+                return
+
+        print("Student not found.")
+
+
+    @classmethod
+    def generate_report_by_professor(cls, professor_id):
+        professors = Professor.load_professors()
+        target_course_id = None
+
+        for professor in professors:
+            if professor.professor_id == professor_id:
+                target_course_id = professor.course_id
+                print(f"Grade Report for Professor: {professor.professor_name}")
+                print(f"Course ID: {professor.course_id}")
+                break
+
+        if target_course_id is None:
+            print("Professor not found.")
+            return
+
+        students = cls.load_students()
+        found = False
+
+        for student in students:
+            if student.course_id == target_course_id:
+                print(f"{student.first_name} {student.last_name} | {student.grade} | {student.marks}")
+                found = True
+
+        if not found:
+            print("No student records found for this professor's course.")
 
 class Course:
     FILE_NAME = os.path.join(os.path.dirname(__file__), "courses.csv")
 
-    def __init__(self, course_id, credits, course_name):
+    def __init__(self, course_id, course_name, description):
         self.course_id = course_id
-        self.credits = int(credits)
         self.course_name = course_name
+        self.description = description
 
     def to_dict(self):
         return {
             "course_id": self.course_id,
-            "credits": self.credits,
-            "course_name": self.course_name
+            "course_name": self.course_name,
+            "description": self.description
         }
 
     @classmethod
@@ -159,8 +299,8 @@ class Course:
             for row in reader:
                 course = cls(
                     row["course_id"],
-                    row["credits"],
-                    row["course_name"]
+                    row["course_name"],
+                    row["description"]
                 )
                 courses.append(course)
 
@@ -169,7 +309,7 @@ class Course:
     @classmethod
     def save_courses(cls, courses):
         with open(cls.FILE_NAME, "w", newline="", encoding="utf-8") as file:
-            fieldnames = ["course_id", "credits", "course_name"]
+            fieldnames = ["course_id", "course_name", "description"]
             writer = csv.DictWriter(file, fieldnames=fieldnames)
             writer.writeheader()
 
@@ -179,15 +319,19 @@ class Course:
     def display_courses(self):
         print("Course Record")
         print(f"Course ID: {self.course_id}")
-        print(f"Credits: {self.credits}")
         print(f"Course Name: {self.course_name}")
+        print(f"Description: {self.description}")
 
     def add_new_course(self):
+        if not self.course_id:
+            print("Course ID cannot be empty.")
+            return
+
         courses = Course.load_courses()
 
         for course in courses:
             if course.course_id == self.course_id:
-                print("Course already exists.")
+                print("Course with this ID already exists.")
                 return
 
         courses.append(self)
@@ -217,16 +361,16 @@ class Course:
 class Professor:
     FILE_NAME = os.path.join(os.path.dirname(__file__), "professors.csv")
 
-    def __init__(self, name, email_address, rank, course_id):
-        self.name = name
-        self.email_address = email_address
+    def __init__(self, professor_id, professor_name, rank, course_id):
+        self.professor_id = professor_id
+        self.professor_name = professor_name
         self.rank = rank
         self.course_id = course_id
 
     def to_dict(self):
         return {
-            "name": self.name,
-            "email_address": self.email_address,
+            "professor_id": self.professor_id,
+            "professor_name": self.professor_name,
             "rank": self.rank,
             "course_id": self.course_id
         }
@@ -243,8 +387,8 @@ class Professor:
 
             for row in reader:
                 professor = cls(
-                    row["name"],
-                    row["email_address"],
+                    row["professor_id"],
+                    row["professor_name"],
                     row["rank"],
                     row["course_id"]
                 )
@@ -255,7 +399,7 @@ class Professor:
     @classmethod
     def save_professors(cls, professors):
         with open(cls.FILE_NAME, "w", newline="", encoding="utf-8") as file:
-            fieldnames = ["name", "email_address", "rank", "course_id"]
+            fieldnames = ["professor_id", "professor_name", "rank", "course_id"]
             writer = csv.DictWriter(file, fieldnames=fieldnames)
             writer.writeheader()
 
@@ -264,16 +408,21 @@ class Professor:
 
     def professors_details(self):
         print("Professor Record")
-        print(f"Name: {self.name}")
-        print(f"Email: {self.email_address}")
+        print(f"Professor ID: {self.professor_id}")
+        print(f"Professor Name: {self.professor_name}")
         print(f"Rank: {self.rank}")
         print(f"Course ID: {self.course_id}")
 
     def add_new_professor(self):
+
+        if not self.professor_id:
+            print("Professor ID cannot be empty.")
+            return
+
         professors = Professor.load_professors()
 
         for professor in professors:
-            if professor.email_address == self.email_address:
+            if professor.professor_id == self.professor_id:
                 print("Professor already exists.")
                 return
 
@@ -282,13 +431,13 @@ class Professor:
         print("New professor added successfully.")
 
     @classmethod
-    def delete_professore(cls, email_address):
+    def delete_professore(cls, professor_id):
         professors = cls.load_professors()
         updated_professors = []
         found = False
 
         for professor in professors:
-            if professor.email_address == email_address:
+            if professor.professor_id == professor_id:
                 found = True
             else:
                 updated_professors.append(professor)
@@ -300,14 +449,14 @@ class Professor:
         else:
             print("Professor not found.")
 
-    def modify_professor_details(self, new_name=None, new_rank=None, new_course_id=None):
+    def modify_professor_details(self, new_professor_name=None, new_rank=None, new_course_id=None):
         professors = Professor.load_professors()
         found = False
 
         for professor in professors:
-            if professor.email_address == self.email_address:
-                if new_name is not None:
-                    professor.name = new_name
+            if professor.professor_id == self.professor_id:
+                if new_professor_name is not None:
+                    professor.professor_name = new_professor_name
                 if new_rank is not None:
                     professor.rank = new_rank
                 if new_course_id is not None:
@@ -324,6 +473,15 @@ class Professor:
             print("Professor not found.")
 
     def show_course_details_by_professor(self):
+        courses = Course.load_courses()
+
+        for course in courses:
+            if course.course_id == self.course_id:
+                print("Course taught by this professor:")
+                course.display_courses()
+                return
+
+        print("Course not found.")
         courses = Course.load_courses()
 
         for course in courses:
@@ -458,7 +616,7 @@ class LoginUser:
 
     @staticmethod
     def decrypt_password():
-        print("SHA-256 passwords cannot be decrypted. They can only be verified.")
+        print("Passwords cannot be decrypted. They can only be verified.")
 
     @classmethod
     def load_users(cls):

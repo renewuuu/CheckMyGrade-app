@@ -1,4 +1,5 @@
-email_id,password,role
+login
+user_id,password,role
 michael.johnson@mycsu.edu,134d15b0ce9f4a9f6f224a2d64cd6c7edf090146ed5fa503c6615a61fa8d853a,professor
 sarah.smith@mycsu.edu,6d0a87d84f373ae487420a92d3b8257b2ffc560f963db5ad626b7d5712eb49db,professor
 david.brown@mycsu.edu,40299c92585f90e0084690ce54936b90a228cb98efb6ad541fbba9cb664d785c,professor

@@ -1,11 +1,13 @@
-course_id,credits,course_name
-DATA200,3,Data Science
-DATA201,3,Python Programming
-DATA202,3,Statistics
-DATA203,3,Machine Learning
-DATA204,3,Database Systems
-DATA205,3,Data Visualization
-DATA206,3,Big Data
-DATA207,3,Cloud Computing
-DATA208,3,Data Mining
-DATA209,3,Algorithms
+course_id,course_name,description
+DATA200,Data Science,Provides insight about DS and Python
+DATA201,Python Programming,Covers Python basics and object-oriented programming
+DATA202,Statistics,Introduces descriptive and inferential statistics
+DATA203,Machine Learning,Explains supervised and unsupervised learning methods
+DATA204,Database Systems,Covers relational databases and SQL concepts
+DATA205,Data Visualization,Focuses on visual representation of data
+DATA206,Big Data,Introduces large-scale data processing concepts
+DATA207,Cloud Computing,Explains cloud platforms and deployment models
+DATA208,Data Mining,Covers pattern discovery and data analysis techniques
+DATA209,Algorithms,Introduces algorithm design and problem-solving methods
+TEST101,Test Course,Test Description
+MOD101,New Course,New Description

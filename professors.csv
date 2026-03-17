@@ -1,11 +1,13 @@
-professor_id,name,email_address,rank,course_id
-PROF001,Michael Johnson,michael.johnson@mycsu.edu,Senior Professor,DATA200
-PROF002,Sarah Smith,sarah.smith@mycsu.edu,Assistant Professor,DATA201
-PROF003,David Brown,david.brown@mycsu.edu,Assistant Professor,DATA202
-PROF004,Emily Davis,emily.davis@mycsu.edu,Senior Professor,DATA203
-PROF005,John Miller,john.miller@mycsu.edu,Associate Professor,DATA204
-PROF006,Sophia Wilson,sophia.wilson@mycsu.edu,Assistant Professor,DATA205
-PROF007,Daniel Moore,daniel.moore@mycsu.edu,Assistant Professor,DATA206
-PROF008,Olivia Taylor,olivia.taylor@mycsu.edu,Assistant Professor,DATA207
-PROF009,James Anderson,james.anderson@mycsu.edu,Senior Professor,DATA208
-PROF010,Emma Thomas,emma.thomas@mycsu.edu,Assistant Professor,DATA209
+professor_id,professor_name,rank,course_id
+michael.johnson@mycsu.edu,Michael Johnson,Associate Professor,DATA200
+sarah.lee@mycsu.edu,Sarah Lee,Assistant Professor,DATA201
+david.wang@mycsu.edu,David Wang,Senior Professor,DATA202
+emily.chen@mycsu.edu,Emily Chen,Associate Professor,DATA203
+robert.brown@mycsu.edu,Robert Brown,Senior Professor,DATA204
+linda.garcia@mycsu.edu,Linda Garcia,Associate Professor,DATA205
+james.wilson@mycsu.edu,James Wilson,Senior Professor,DATA206
+sophia.martinez@mycsu.edu,Sophia Martinez,Senior Professor,DATA207
+daniel.kim@mycsu.edu,Daniel Kim,Assistant Professor,DATA208
+olivia.clark@mycsu.edu,Olivia Clark,Associate Professor,DATA209
+test.prof@mycsu.edu,Test Professor,Assistant Professor,DATA200
+modify.prof@mycsu.edu,New Professor,Senior Professor,DATA200

@@ -1,4 +1,4 @@
-first_name,last_name,email_address,course_id,grade,marks
+first_name,last_name,email_address,course_id,grades,marks
 Amelia,Thompson,student0001@mycsu.edu,DATA200,D,64
 Benjamin,Lee,student0002@mycsu.edu,DATA206,B,85
 Isabella,Perez,student0003@mycsu.edu,DATA204,D,64
@@ -1000,3 +1000,5 @@ Harper,Lee,student0998@mycsu.edu,DATA204,C,76
 Alexander,Lopez,student0999@mycsu.edu,DATA203,A,92
 Noah,Thomas,student1000@mycsu.edu,DATA209,F,56
 Sam,Carpenter,sam@mycsu.edu,DATA200,A,96
+Test,User,testuser@mycsu.edu,DATA200,A,95
+Update,User,updateuser@mycsu.edu,DATA200,B,88
